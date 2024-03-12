@@ -64,13 +64,13 @@ ticks = 1
 emptyObstacleY = 0
 obstacles = []
 bird = MySprite(0, 2,25,0,0)
-
+gameOver = False
 emptyObstacleY = randint(0, 7)
 for index in range(8):
     if index != emptyObstacleY:
         obstacles.append(MySprite(7, index,0,0,25))
 
-while True:
+while gameOver == False:
     if pin8.read_digital() == 0:
         bird.change("y",-1)
     if pin14.read_digital() == 0:
@@ -80,16 +80,22 @@ while True:
         # print("obs-len", len(obstacles), "x=",obstacles[0].x)
         obstacles[0].clear()
         obstacles.pop(0)
+        bird.plot()
     if ticks % 10 == 0:   
         for obstacle in obstacles:
             obstacle.change("x", -1)
+            print("obstacle x=",obstacle.x, "obstacle y=",obstacle.y)
+        for obstacle2 in obstacles:
+            if obstacle2.x == 0 and bird.y == obstacle2.y:
+                gameOver = True
     if ticks % 30 == 0:    
         emptyObstacleY = randint(0, 7)
         for index in range(8):
             if index != emptyObstacleY:
                 obstacles.append(MySprite(7, index,0,0,25))
+    
     ticks += 1
-    print(ticks)
+    # print(ticks)
     sleep(100)
 
-        
+display.scroll("game over", delay = 150)    
